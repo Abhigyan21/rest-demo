@@ -36,13 +36,6 @@ jobs:
           creds: '${{ secrets.AZURE_CREDENTIALS }}'
           cluster-name: kubernetes-cluster
           resource-group: kubernetes-resource-group
-      - uses: azure/k8s-create-secret@v1
-        with:
-          container-registry-url: docker.io
-          container-registry-username: '${{ secrets.DOCKERHUB_USERNAME }}'
-          container-registry-password: '${{ secrets.DOCKERHUB_PASSWORD }}'
-          namespace: default
-          force: true
       - uses: azure/k8s-deploy@v1
         with:
           manifests: |
