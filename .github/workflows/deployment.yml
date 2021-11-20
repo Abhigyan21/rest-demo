@@ -26,7 +26,7 @@ jobs:
           key: '${{ runner.os }}-m2-${{ hashFiles(''**/pom.xml'') }}'
           restore-keys: '${{ runner.os }}-m2'
       - name: Build with Maven
-        run: mvn --batch-mode --update-snapshots verify -s settings.xml
+        run: mvn --batch-mode --update-snapshots verify
       - name: Build and push docker Image
         run: |
           docker build . -t abhigyan21/rest-demo:latest -f Dockerfile
