@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rest-demo-deployment
+  labels:
+    app: rest-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rest-demo
+  template:
+    metadata:
+      labels:
+        app: rest-demo
+    spec:
+      containers:
+      - name: rest-demo
+        image: abhigyan21/rest-demo:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: rest-demo-service
+spec:
+  selector:
+    app: rest-demo
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+      nodePort: 30001
