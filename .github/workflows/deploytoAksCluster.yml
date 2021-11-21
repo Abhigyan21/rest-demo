@@ -43,8 +43,8 @@ jobs:
       - name: Build and push image to ACR
         id: build-image
         run: |
-          docker build "$GITHUB_WORKSPACE/" -f  "Dockerfile" -t demorepository.azurecr.io/kubernetescluster:${{ github.sha }} --label dockerfile-path=Dockerfile
-          docker push demorepository.azurecr.io/kubernetescluster:${{ github.sha }}
+          docker build "$GITHUB_WORKSPACE/" -f  "Dockerfile" -t demorepository.azurecr.io/rest-demo:latest --label dockerfile-path=Dockerfile
+          docker push demorepository.azurecr.io/rest-demo:latest
 
       - uses: azure/k8s-set-context@v1
         id: login
@@ -71,10 +71,9 @@ jobs:
         with:
           namespace: default
           manifests: |
-            manifests/deployment.yml
-            manifests/service.yml
+            kubernetes/rest-demo.yml
           images: |
-            demorepository.azurecr.io/kubernetescluster:${{ github.sha }}
+            demorepository.azurecr.io/rest-demo:latest
           imagepullsecrets: |
             kubernetescldockerauth
 
