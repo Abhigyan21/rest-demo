@@ -44,4 +44,9 @@ jobs:
             abhigyan21/rest-demo:latest
           namespace: default
           force: true
+      - uses: azure/setup-kubectl@v1
+        with:
+          version: '<version>'
+        id: install
+      - name: Restart deployment
         run: kubectl rollout restart deployment rest-demo-deployment
