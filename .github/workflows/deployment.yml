@@ -46,7 +46,7 @@ jobs:
           force: true
       - uses: azure/setup-kubectl@v1
         with:
-          version: '<version>'
+          version: 'default'
         id: install
       - name: Restart deployment
         run: kubectl rollout restart deployment rest-demo-deployment
