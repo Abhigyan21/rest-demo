@@ -3,22 +3,22 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-    
-    - uses: actions/checkout@master
-    
-    - uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - uses: azure/docker-login@v1
-      with:
-        login-server: demorepository.azurecr.io
-        username: ${{ steps.create-acr.outputs.acr_username }}
-        password: ${{ steps.create-acr.outputs.acr_password }}
+      - uses: actions/checkout@master
 
-    - name: Set up JDK 8
-      uses: actions/setup-java@v2
-      with:
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - uses: azure/docker-login@v1
+        with:
+          login-server: demorepository.azurecr.io
+          username: ${{ steps.create-acr.outputs.acr_username }}
+          password: ${{ steps.create-acr.outputs.acr_password }}
+
+      - name: Set up JDK 8
+        uses: actions/setup-java@v2
+        with:
           java-version: '8'
           distribution: 'adopt'
       - name: Cache Maven packages
@@ -32,40 +32,40 @@ jobs:
         run: |
           mvn --batch-mode --update-snapshots verify
 
-    - name: Build and push image to ACR
-      id: build-image
-      run: |
-        docker build "$GITHUB_WORKSPACE/" -f  "Dockerfile" -t demorepository.azurecr.io/kubernetescluster:${{ github.sha }} --label dockerfile-path=Dockerfile
-        docker push demorepository.azurecr.io/kubernetescluster:${{ github.sha }}
-    
-    - uses: azure/k8s-set-context@v1
-      id: login
-      with:
-         kubeconfig: ${{ secrets.aks_kubernetescluster_kubeConfig }}
-    
-    - name: Create namespace
-      run: |
-        namespacePresent=`kubectl get namespace | grep default | wc -l`
-        if [ $namespacePresent -eq 0 ]
-        then
-            echo `kubectl create namespace default`
-        fi
+      - name: Build and push image to ACR
+        id: build-image
+        run: |
+          docker build "$GITHUB_WORKSPACE/" -f  "Dockerfile" -t demorepository.azurecr.io/kubernetescluster:${{ github.sha }} --label dockerfile-path=Dockerfile
+          docker push demorepository.azurecr.io/kubernetescluster:${{ github.sha }}
 
-    - uses: azure/k8s-create-secret@v1
-      with:
-        namespace: default
-        container-registry-url: demorepository.azurecr.io
-        container-registry-username: ${{ steps.create-acr.outputs.acr_username }}
-        container-registry-password: ${{ steps.create-acr.outputs.acr_password }}
-        secret-name: kubernetescldockerauth
-       
-    - uses: azure/k8s-deploy@v1.2
-      with:
-        namespace: default
-        manifests: |
-          manifests/deployment.yml
-          manifests/service.yml
-        images: |
-          demorepository.azurecr.io/kubernetescluster:${{ github.sha }}
-        imagepullsecrets: |
-          kubernetescldockerauth   
+      - uses: azure/k8s-set-context@v1
+        id: login
+        with:
+          kubeconfig: ${{ secrets.aks_kubernetescluster_kubeConfig }}
+
+      - name: Create namespace
+        run: |
+          namespacePresent=`kubectl get namespace | grep default | wc -l`
+          if [ $namespacePresent -eq 0 ]
+          then
+              echo `kubectl create namespace default`
+          fi
+
+      - uses: azure/k8s-create-secret@v1
+        with:
+          namespace: default
+          container-registry-url: demorepository.azurecr.io
+          container-registry-username: ${{ steps.create-acr.outputs.acr_username }}
+          container-registry-password: ${{ steps.create-acr.outputs.acr_password }}
+          secret-name: kubernetescldockerauth
+
+      - uses: azure/k8s-deploy@v1.2
+        with:
+          namespace: default
+          manifests: |
+            manifests/deployment.yml
+            manifests/service.yml
+          images: |
+            demorepository.azurecr.io/kubernetescluster:${{ github.sha }}
+          imagepullsecrets: |
+            kubernetescldockerauth
