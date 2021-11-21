@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: rest-demo
-        image: abhigyan21/rest-demo:latest
+        image: demorepository.azurecr.io/rest-demo:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
