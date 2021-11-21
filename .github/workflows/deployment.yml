@@ -14,7 +14,7 @@ jobs:
         with:
           username: '${{ secrets.DOCKERHUB_USERNAME }}'
           password: '${{ secrets.DOCKERHUB_PASSWORD }}'
-      - name: Set up JDK 11
+      - name: Set up JDK 8
         uses: actions/setup-java@v2
         with:
           java-version: '8'
@@ -26,10 +26,11 @@ jobs:
           key: '${{ runner.os }}-m2-${{ hashFiles(''**/pom.xml'') }}'
           restore-keys: '${{ runner.os }}-m2'
       - name: Build with Maven
-        run: mvn --batch-mode --update-snapshots verify
+        run: |
+          mvn --batch-mode --update-snapshots verify
       - name: Build and push docker Image
         run: |
-          docker build . -t abhigyan21/rest-demo:latest -f Dockerfile
+          docker build -t abhigyan21/rest-demo:latest .
           docker push abhigyan21/rest-demo:latest
       - uses: azure/aks-set-context@v1
         with:
