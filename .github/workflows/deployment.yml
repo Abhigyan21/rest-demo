@@ -53,4 +53,5 @@ jobs:
         with:
           azcliversion: 2.0.72
           inlineScript: |
+            az extension add --name aks-preview
             az aks command invoke -n kubernetes-cluster -g kubernetes-resource-group -c kubectl rollout restart deployment rest-demo-deployment
