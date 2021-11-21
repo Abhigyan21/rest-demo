@@ -44,3 +44,15 @@ jobs:
             abhigyan21/rest-demo:latest
           namespace: default
           force: true
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - name: Azure CLI script
+        uses: azure/CLI@v1
+        with:
+          azcliversion: 2.0.72
+          inlineScript: |
+            az account set --subscription {{ secrets.AZURE_SUBSCRIPTION_ID }}
+            az aks get-credentials --resource-group kubernetes-resource-group --name kubernetes-cluster
+            kubectl rollout restart deployment rest-demo-deployment

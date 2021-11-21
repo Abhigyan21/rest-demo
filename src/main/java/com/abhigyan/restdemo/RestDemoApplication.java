@@ -13,8 +13,13 @@ public class RestDemoApplication {
 		SpringApplication.run(RestDemoApplication.class, args);
 	}
 
+	String htmlReturnData = "<html>" +
+			"<head><title>K8S Azure</title></head>" +
+			"<body>Welcome to K8S on Azure via SpringBoot</body>" +
+			"</html>";
+
 	@GetMapping("/home")
 	public String welcome() {
-		return "Welcome to Spring Boot Kubernetes!!!";
+		return htmlReturnData;
 	}
 }
