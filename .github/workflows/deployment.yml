@@ -46,7 +46,7 @@ jobs:
           force: true
       - uses: azure/setup-kubectl@v1
         with:
-          version: '1.19'
+          version: 'v1.19.0'
         id: install
       - name: Azure Login
         uses: azure/login@v1
