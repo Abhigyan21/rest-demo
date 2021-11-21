@@ -69,3 +69,18 @@ jobs:
             demorepository.azurecr.io/kubernetescluster:${{ github.sha }}
           imagepullsecrets: |
             kubernetescldockerauth
+
+      - uses: azure/setup-kubectl@v1
+        with:
+          version: 'v1.19.0'
+        id: install
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Restart deployment
+        run: |
+          az account set --subscription ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          kubectl rollout restart deployment rest-demo-deployment
