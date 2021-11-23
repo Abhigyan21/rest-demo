@@ -15,7 +15,7 @@ public class RestDemoApplication {
 
 	String htmlReturnData = "<html>" +
 			"<head><title>K8S Azure</title></head>" +
-			"<body><h1>Welcome to K8S on Azure via SpringBoot some more data here</h1></body>" +
+			"<body><h1>Welcome to K8S on Azure via SpringBoot some more data here some more data</h1></body>" +
 			"</html>";
 
 	@GetMapping("/home")
